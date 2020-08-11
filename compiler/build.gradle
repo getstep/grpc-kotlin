@@ -97,7 +97,7 @@ task prependShellStub() {
 publishing {
     publications {
         maven(MavenPublication) {
-            from components.java
+            // from components.java
 
             // Removes all artifacts since grpc-kotlin-compiler doesn't generate any
             artifacts = []
@@ -122,7 +122,7 @@ publishing {
                 // javadoc for 'pom' packages. 'exe' would be a more appropriate packaging
                 // value, but it isn't clear how that will be interpreted. In addition,
                 // 'pom' is typically the value used when building an exe with Maven.
-                asNode().project.packaging*.value = 'pom'
+                asNode().project.packaging*.value = 'exe'
             }
         }
     }

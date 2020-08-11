@@ -17,9 +17,17 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.jetbrains.kotlin.jvm'
     group = "io.grpc"
-    version = "0.1.4" // CURRENT_GRPC_KOTLIN_VERSION
+    version = "0.1.10-STEP" // CURRENT_GRPC_KOTLIN_VERSION
     repositories {
         mavenCentral()
+        maven {
+            name = 'GitHubPackages'
+            url = 'https://maven.pkg.github.com/getstep/grpc-kotlin'
+            credentials {
+                username = project.findProperty("gpr.username") ?: System.getenv("GITHUB_PACKAGES_USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
+            }
+        }
     }
     dependencies {
         testImplementation "junit:junit:4.12"
@@ -59,7 +67,6 @@ subprojects {
         || project.name == "grpc-kotlin-stub-lite"
     ) {
         apply plugin: 'maven-publish'
-        apply plugin: 'signing'
 
         plugins.withId("maven-publish") {
             publishing {
@@ -101,20 +108,19 @@ subprojects {
                         }
                     }
                 }
+
+                // GitHub Packages publication.
                 repositories {
                     maven {
-                        url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                        name = 'GitHubPackages'
+                        url = 'https://maven.pkg.github.com/getstep/grpc-kotlin'
                         credentials {
-                            username project.findProperty("sonatypeUsername") ?: ""
-                            password project.findProperty("sonatypePassword") ?: ""
+                            username = project.findProperty("gpr.username") ?: System.getenv("GITHUB_PACKAGES_USERNAME")
+                            password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
                         }
                     }
                 }
             }
-        }
-
-        signing {
-            sign publishing.publications
         }
     }
 
